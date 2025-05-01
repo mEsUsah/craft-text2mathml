@@ -89,7 +89,7 @@ class MathField extends Field
             $mathml = str_replace('&gt;', '>', $mathml);
             $mathml = str_replace('&gt;', '>', $mathml);
             $mathml = str_replace('&#39;', "'",$mathml);
-
+            
             $valueJson = json_encode([
                 'input' => $value,
                 'output' => $mathml,
@@ -102,6 +102,7 @@ class MathField extends Field
     private function getMathML(string $input): string
     {
         // contact the MathML API to convert the input to MathML
+        
         try {
             $data = [
                 'tst1' => '{"delivery" ->"embed","character" ->"mathml","indent" ->"false","markup" ->"presentation","declare" ->"false","document" ->"false"}',
@@ -111,6 +112,7 @@ class MathField extends Field
                 'formname' => 'tomathml',
                 'form' => 'TraditionalForm',
             ];
+            
             
             $ch = curl_init('https://www.mathmlcentral.com/Tools/XhtmlResult.jsp');
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
