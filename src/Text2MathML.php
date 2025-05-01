@@ -4,6 +4,10 @@ namespace mesusah\crafttext2mathml;
 
 use Craft;
 use craft\base\Plugin;
+use craft\events\RegisterComponentTypesEvent;
+use craft\services\Fields;
+use mesusah\crafttext2mathml\fields\MathField;
+use yii\base\Event;
 
 /**
  * Text 2 MathML plugin
@@ -37,11 +41,22 @@ class Text2MathML extends Plugin
         Craft::$app->onInit(function() {
             // ...
         });
+
+        Event::on(
+            Fields::class,
+            Fields::EVENT_REGISTER_FIELD_TYPES,
+            function(RegisterComponentTypesEvent $event) {
+                $event->types[] = MathField::class;
+            }
+        );
     }
 
     private function attachEventHandlers(): void
     {
         // Register event handlers here ...
         // (see https://craftcms.com/docs/5.x/extend/events.html to get started)
+        // Event::on(Fields::class, Fields::EVENT_REGISTER_FIELD_TYPES, function (RegisterComponentTypesEvent $event) {
+        //     $event->types[] = MathField::class;
+        // });
     }
 }

@@ -24,6 +24,7 @@
     "handle": "text2mathml",
     "name": "Text 2 MathML",
     "developer": "mEsUsah",
+    "developerUrl": "https://www.haxor.no",
     "documentationUrl": "https://github.com/mesusah/craft-text2mathml",
     "class": "mesusah\\crafttext2mathml\\Text2MathML"
   },

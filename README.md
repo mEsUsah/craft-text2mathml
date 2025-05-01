@@ -28,3 +28,7 @@ composer require mesusah/craft-text2mathml
 # tell Craft to install the plugin
 ./craft plugin/install text2mathml
 ```
+
+
+## Resources 
+https://www.mathmlcentral.com/Tools/ToMathML.jsp
