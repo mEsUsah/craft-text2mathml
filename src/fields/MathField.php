@@ -89,7 +89,6 @@ class MathField extends Field
             $mathml = str_replace('&gt;', '>', $mathml);
             $mathml = str_replace('&gt;', '>', $mathml);
             $mathml = str_replace('&#39;', "'",$mathml);
-            $mathml = str_replace('\n', '',$mathml);
 
             $valueJson = json_encode([
                 'input' => $value,
