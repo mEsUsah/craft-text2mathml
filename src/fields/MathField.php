@@ -60,6 +60,12 @@ class MathField extends Field
 
     public function normalizeValue(mixed $value, ?ElementInterface $element): mixed
     {
+        // if the request is a CP recuewest, return the value as is
+        if (Craft::$app->getRequest()->isCpRequest) {
+            return $value;
+        } 
+        
+        // Only return output to frontend
         $fieldData = json_decode($value);
         return $fieldData->output ?? '';
     }
