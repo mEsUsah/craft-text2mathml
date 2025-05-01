@@ -65,19 +65,26 @@ class MathField extends Field
 
     protected function inputHtml(mixed $value, ?ElementInterface $element, bool $inline): string
     {
-        // Render the input HTML for the field
+        $fieldData = json_decode($value);
+        
+        // Render the HTML for the field
         return Craft::$app->getView()->renderTemplate('text2mathml/fields/mathField', [
             'field' => $this,
-            'value' => $value,
+            'input' => $fieldData->input ?? '',
+            'valueDecoded' => $fieldData,
         ]);
     }
 
     public function beforeElementSave(ElementInterface $element, bool $isNew): bool
     {
+        // Update the output value before saving to the database
         if ($element->isFieldDirty($this->handle)) {
             $value = $element->getFieldValue($this->handle);
-            $value = $value . ' PoC';
-            $element->setFieldValue($this->handle, $value);
+            $valueJson = json_encode([
+                'input' => $value,
+                'output' => "test",
+            ]);
+            $element->setFieldValue($this->handle, $valueJson);
         }
         return parent::beforeElementSave($element, $isNew);
     }
