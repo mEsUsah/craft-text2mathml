@@ -1,0 +1,40 @@
+{
+  "name": "mesusah/craft-text2mathml",
+  "version": "0.0.1",
+  "description": "Craft field to convert text to MathML",
+  "type": "craft-plugin",
+  "license": "mit",
+  "support": {
+    "email": "stanley@haxor.no",
+    "issues": "https://github.com/mesusah/craft-text2mathml/issues?state=open",
+    "source": "https://github.com/mesusah/craft-text2mathml",
+    "docs": "https://github.com/mesusah/craft-text2mathml",
+    "rss": "https://github.com/mesusah/craft-text2mathml/releases.atom"
+  },
+  "require": {
+    "php": ">=8.0",
+    "craftcms/cms": "^5.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "mesusah\\crafttext2mathml\\": "src/"
+    }
+  },
+  "extra": {
+    "handle": "text2mathml",
+    "name": "Text 2 MathML",
+    "developer": "mEsUsah",
+    "documentationUrl": "https://github.com/mesusah/craft-text2mathml",
+    "class": "mesusah\\crafttext2mathml\\Text2MathML"
+  },
+  "config": {
+    "sort-packages": true,
+    "platform": {
+      "php": "8.2"
+    },
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "craftcms/plugin-installer": true
+    }
+  }
+}
