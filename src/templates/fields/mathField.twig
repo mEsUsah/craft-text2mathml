@@ -3,15 +3,36 @@
 {{ forms.textField({
     first: true,
     instructions: 'Input - <a href="https://www.mathmlcentral.com/format.html" target="_blank">How to Format Your Input</a>',
+    
     name: field.handle,
-    value: value
+    value: value,
+    
 }) }}
 
-<hr>
+<div class="field">
+    <div class="instructions">
+        <p >Output  - Updates after save</p>
+    </div>
+    <div style="width: 100%; border-radius: 3px; padding: 10px; overflow: auto; background: #345e34; color: white;">
+        <math xmlns='http://www.w3.org/1998/Math/MathML'>
+            <mrow>
+                <mrow>
+                <mi>cos</mi>
+                <mo>&#8289;</mo>
+                <mo>(</mo>
+                <msup>
+                <mi>x</mi>
+                <mn>3</mn>
+                </msup>
+                <mo>)</mo>
+                </mrow>
+                <mo>+</mo>
+                <mn>2</mn>
+            </mrow>
+        </math>
+    </div>
+</div>
 
-<pre>
-    {{ dump(field) }}
-</pre>
 <pre>
     {{ dump(value) }}
 </pre>
