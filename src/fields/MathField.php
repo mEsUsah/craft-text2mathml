@@ -60,7 +60,8 @@ class MathField extends Field
 
     public function normalizeValue(mixed $value, ?ElementInterface $element): mixed
     {
-        return $value;
+        $fieldData = json_decode($value);
+        return $fieldData->output ?? '';
     }
 
     protected function inputHtml(mixed $value, ?ElementInterface $element, bool $inline): string
