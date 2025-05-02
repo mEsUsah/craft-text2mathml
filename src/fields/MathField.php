@@ -6,11 +6,13 @@ use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\helpers\Cp;
+use craft\helpers\ElementHelper;
 use craft\elements\db\ElementQueryInterface;
 use craft\helpers\Html;
 use craft\helpers\StringHelper;
 use yii\db\ExpressionInterface;
 use yii\db\Schema;
+use mesusah\crafttext2mathml\controllers\FormulaController;
 
 /**
  * Math Field field type
@@ -60,91 +62,43 @@ class MathField extends Field
 
     public function normalizeValue(mixed $value, ?ElementInterface $element): mixed
     {
-        // if the request is a CP recuewest, return the value as is
-        if (Craft::$app->getRequest()->isCpRequest) {
+        // if CP request, return the input value
+        if (Craft::$app->getRequest()->getIsCpRequest()) {
             return $value;
-        } 
-        
-        // Only return output to frontend
-        $fieldData = json_decode($value);
-        return $fieldData->output ?? '';
+        }
+
+        // MathML output
+        return FormulaController::find($element->id)->formula ?? null;
     }
 
     protected function inputHtml(mixed $value, ?ElementInterface $element, bool $inline): string
     {
-        $fieldData = json_decode($value);
-
+        $output = FormulaController::find($element->id);
         // Render the HTML for the field
         return Craft::$app->getView()->renderTemplate('text2mathml/fields/mathField', [
             'field' => $this,
-            'input' => $fieldData->input ?? '',
-            'output' => $fieldData->output ?? '',
-            'valueDecoded' => $fieldData,
+            'input' => $value ?? '',
+            'output' => $output->formula ?? '',
+            'dump' => $element,
         ]);
     }
 
-    public function beforeElementSave(ElementInterface $element, bool $isNew): bool
+    public function afterElementSave(ElementInterface $element, bool $isNew): void
     {
-        // Update the output value before saving to the database
-        if ($element->isFieldDirty($this->handle)) {
-            $value = $element->getFieldValue($this->handle);
-
-            $mathml = $this->getMathML($value);
-            $mathml = str_replace('<pre>', '', $mathml);
-            $mathml = str_replace('</pre>', '', $mathml);
-            $mathml = str_replace('&lt;', '<', $mathml);
-            $mathml = str_replace('&gt;', '>', $mathml);
-            $mathml = str_replace('&gt;', '>', $mathml);
-            $mathml = str_replace('&#39;', "'",$mathml);
-            
-            $valueJson = json_encode([
-                'input' => $value,
-                'output' => $mathml,
-            ]);
-            $element->setFieldValue($this->handle, $valueJson);
+        // // never update if the element is a draft
+        if (ElementHelper::isDraft($element)) {
+            return;
         }
-        return parent::beforeElementSave($element, $isNew);
-    }
-
-    private function getMathML(string $input): string
-    {
-        // contact the MathML API to convert the input to MathML
         
-        try {
-            $data = [
-                'tst1' => '{"delivery" ->"embed","character" ->"mathml","indent" ->"false","markup" ->"presentation","declare" ->"false","document" ->"false"}',
-                'formattype1' => 'MathML',
-                'txt' => $input,
-                'type' => 'txt',
-                'formname' => 'tomathml',
-                'form' => 'TraditionalForm',
-            ];
-            
-            
-            $ch = curl_init('https://www.mathmlcentral.com/Tools/XhtmlResult.jsp');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Content-Type: application/x-www-form-urlencoded',
-                'Accept: text/html, */*',
-                'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
-                'x-requested-with: XMLHttpRequest',
-                'host: www.mathmlcentral.com',
-                'referer: https://www.mathmlcentral.com/Tools/ToMathML.jsp',
-            ]);
-            
-            $response = curl_exec($ch);
-            curl_close($ch);
-
-            if ($response === false) {
-                throw new \Exception('Failed to fetch MathML from the API');
-            }
-            return $response;
+        $value = $element->getFieldValue($this->handle);
+        try{
+            // Update the output value after saving to the database
+            $formula = FormulaController::getMathML($value);
         } catch (\Exception $e) {
-            Craft::error('Error fetching MathML: ' . $e->getMessage(), __METHOD__);
-            return '<p>API error</p>';
+            Craft::error('Error getting MathML: ' . $e->getMessage(), __METHOD__);
+            $formula = '<p>API error</p>';
         }
+        FormulaController::save($element->id, $formula);
     }
 
     public function getElementValidationRules(): array
