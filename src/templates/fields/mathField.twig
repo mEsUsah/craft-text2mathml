@@ -3,10 +3,8 @@
 {{ forms.textField({
     first: true,
     instructions: 'Input - <a href="https://www.mathmlcentral.com/format.html" target="_blank">How to Format Your Input</a>',
-    
     name: field.handle,
     value: input,
-    
 }) }}
 
 <div class="field">
@@ -17,9 +15,3 @@
         {{output|raw}}
     </div>
 </div>
-
-<pre>
-    {{ dump(dump) }}
-</pre>
-
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
