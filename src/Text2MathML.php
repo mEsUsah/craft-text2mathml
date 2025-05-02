@@ -49,6 +49,12 @@ class Text2MathML extends Plugin
                 $event->types[] = MathField::class;
             }
         );
+
+        // Register the MathJax JS library
+        Craft::$app->getView()->registerJsFile(
+            'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+            ['position' => \yii\web\View::POS_END]
+        );
     }
 
     private function attachEventHandlers(): void
