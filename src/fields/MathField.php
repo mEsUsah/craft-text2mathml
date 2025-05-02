@@ -91,13 +91,8 @@ class MathField extends Field
         }
         
         $value = $element->getFieldValue($this->handle);
-        try{
-            // Update the output value after saving to the database
-            $formula = FormulaController::getMathML($value);
-        } catch (\Exception $e) {
-            Craft::error('Error getting MathML: ' . $e->getMessage(), __METHOD__);
-            $formula = '<p>API error</p>';
-        }
+        $formula = FormulaController::getMathML($value);
+
         FormulaController::save($element->id, $formula);
     }
 

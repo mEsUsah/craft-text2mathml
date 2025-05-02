@@ -63,7 +63,6 @@ class FormulaController extends Controller
                 'form' => 'TraditionalForm',
             ];
             
-            
             $ch = curl_init('https://www.mathmlcentral.com/Tools/XhtmlResult.jsp');
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POST, true);
@@ -71,22 +70,25 @@ class FormulaController extends Controller
             curl_setopt($ch, CURLOPT_HTTPHEADER, [
                 'Content-Type: application/x-www-form-urlencoded',
                 'Accept: text/html, */*',
-                'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
-                'x-requested-with: XMLHttpRequest',
-                'host: www.mathmlcentral.com',
-                'referer: https://www.mathmlcentral.com/Tools/ToMathML.jsp',
             ]);
             
             $response = curl_exec($ch);
             curl_close($ch);
-
-            if ($response === false) {
-                throw new \Exception('Failed to fetch MathML from the API');
+            
+            // Check http response code
+            if (curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200) {
+                throw new \Exception('Curl error: ' . curl_error($ch));
             }
+            
+            if ($response === false) {
+                throw new \Exception('API call failed');
+            }
+
             return self::cleanUpMathML($response);
+
         } catch (\Exception $e) {
             Craft::error('Error fetching MathML: ' . $e->getMessage(), __METHOD__);
-            return '<p>API error</p>';
+            return '<p><em>API error - Unable to contact service!</em></p>';
         }
     }
 
