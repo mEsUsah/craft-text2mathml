@@ -78,7 +78,7 @@ class MathField extends Field
         return Craft::$app->getView()->renderTemplate('text2mathml/fields/mathField', [
             'field' => $this,
             'input' => $value ?? '',
-            'output' => $output->formula ?? '',
+            'output' => $output->formula ?? '<p><em>Draft - Will generate Formula when saved</em></p>',
             'dump' => $element,
         ]);
     }
