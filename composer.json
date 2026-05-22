@@ -1,6 +1,6 @@
 {
   "name": "mesusah/craft-text2mathml",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Craft field to convert text to MathML",
   "type": "craft-plugin",
   "license": "mit",

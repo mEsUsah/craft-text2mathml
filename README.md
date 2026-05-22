@@ -1,5 +1,6 @@
 # Text 2 MathML
-Craft CMS field to convert text to MathML
+Craft CMS field to convert LaTeX formulas to MathML.
+Can be used by copying a formula from MS Word or an online LaTeX editor
 
 ## Requirements
 This plugin requires Craft CMS 5.0.0 or later, and PHP 8.0 or later.
