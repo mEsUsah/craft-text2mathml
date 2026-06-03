@@ -53,6 +53,7 @@ class FormulaController extends Controller
         // Convert inner a/b first, then handle (expr)/(expr) and a/(expr)
         $latex = preg_replace('/([a-zA-Z0-9_]+)\/([a-zA-Z0-9_]+)/', '\\frac{$1}{$2}', $input);
         $latex = preg_replace('/\(([^)]+)\)\/\(([^)]+)\)/', '\\frac{$1}{$2}', $latex);
+        $latex = preg_replace('/\(([^)]+)\)\/([a-zA-Z0-9_]+)/', '\\frac{$1}{$2}', $latex);
         $latex = preg_replace('/([a-zA-Z0-9_]+)\/\(([^)]+)\)/', '\\frac{$1}{$2}', $latex);
         return '$$' . trim($latex) . '$$';
     }
