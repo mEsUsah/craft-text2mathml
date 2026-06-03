@@ -51,10 +51,11 @@ class FormulaController extends Controller
     public static function getMathML(string $input): string
     {
         // Convert inner a/b first, then handle (expr)/(expr) and a/(expr)
-        $latex = preg_replace('/([a-zA-Z0-9_]+)\/([a-zA-Z0-9_]+)/', '\\frac{$1}{$2}', $input);
-        $latex = preg_replace('/\(([^)]+)\)\/\(([^)]+)\)/', '\\frac{$1}{$2}', $latex);
-        $latex = preg_replace('/\(([^)]+)\)\/([a-zA-Z0-9_]+)/', '\\frac{$1}{$2}', $latex);
-        $latex = preg_replace('/([a-zA-Z0-9_]+)\/\(([^)]+)\)/', '\\frac{$1}{$2}', $latex);
+        $simple = '[\p{L}\p{N}_]+';
+        $latex = preg_replace('/(' . $simple . ')\s*\/\s*(' . $simple . ')/u', '\\frac{$1}{$2}', $input);
+        $latex = preg_replace('/\(([^)]+)\)\s*\/\s*\(([^)]+)\)/u', '\\frac{$1}{$2}', $latex);
+        $latex = preg_replace('/\(([^)]+)\)\s*\/\s*(' . $simple . ')/u', '\\frac{$1}{$2}', $latex);
+        $latex = preg_replace('/(' . $simple . ')\s*\/\s*\(([^)]+)\)/u', '\\frac{$1}{$2}', $latex);
         return '$$' . trim($latex) . '$$';
     }
 
